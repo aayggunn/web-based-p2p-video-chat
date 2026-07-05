@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayeka.us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="home-page.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header bg-primary text-white p-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Kayeka</h3>
+            <nav>
+                <a href="logout.php" class="text-white me-3">Profil</a>
+                <form method="POST" action="" class="d-inline">
+                    <button type="submit" name="logout" class="btn btn-link text-white p-0">Çıkış Yap</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Ana İçerik -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Görüntülü Konuşma Alanı (Sol) -->
+            <div class="col-md-8">
+                <div class="row">
+                    <!-- Kişi 1 -->
+                    <div class="col-md-6">
+                        <div class="image-frame">
+                            <img src="img1.jpg" alt="User 1" class="w-100 h-100">
+                        </div>
+                        <!-- Resim Altı Alanı -->
+                       <div class="image-controls mt-3 text-center">
+						<p class="mb-2">
+							<small>
+								Toplam Kullanıcı: 1000 | 
+								<span class="online-status">
+									<span class="online-dot"></span> Çevrimiçi: 250
+								</span>
+							</small>
+						</p>
+						<button class="btn btn-start btn-lg me-2">Başlat</button>
+						<button class="btn btn-stop btn-lg me-2">Durdur</button>                           
+					</div>
+                    </div>
+                    <!-- Kişi 2 -->
+                    <div class="col-md-6">
+                        <div class="image-frame">
+                            <img src="img2.jpg" alt="User 2" class="w-100 h-100">
+                        </div>
+                        <!-- Resim Altı Alanı -->
+                        <div class="image-controls mt-3 text-center">                            
+                            <button class="btn btn-female btn-lg me-2">Kadın</button>
+                            <button class="btn btn-male btn-lg">Erkek</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sohbet Alanı (Sağ) -->
+            <div class="col-md-4">
+                <div class="chat-container">
+                    <div class="chat-header bg-secondary text-white p-3">
+                        <h5 class="mb-0">Sohbet</h5>
+                    </div>
+                    <div class="chat-body p-3">
+                        <div class="message received">
+                            <p>Hi Samyeli. Neredesin?</p>
+                        </div>
+                        <div class="message sent">
+                            <p>Bal kutumu poyraz rüzgarına verdim yellendiriyorum. Sen?</p>
+                        </div>
+                        <div class="message received">
+                            <p>Evdeyim. Ders Kaydı yapmaya uğraşıyorum.</p>
+                        </div>
+                        <div class="message sent">
+                            <p>Boşver kalsın, son gün bakarız</p>
+                        </div>
+                        <div class="message received">
+                            <p>ŞahMat oldum. Hiçbir şekilde ders alamıyorum.</p>
+                        </div>
+                        <div class="message received">
+                            <p>Sağlık olsun. Sanki 4 yılda bitirecen?</p>
+                        </div>
+                        <div class="message sent">
+                            <p>Hocam hiç bitmiyor kıyamete kadar ders alamıcam. Biliyon mu?</p>
+                        </div>
+                        <div class="message received">
+                            <p>Abartma olum. Ben bitirdim de noldu, milletten tonla küfür yiyip pandora kutumu yellendiriyorum.</p>
+                        </div>
+                        <div class="message sent">
+                            <p>Doğru hocam</p>
+                        </div>
+                        <div class="message received">
+                            <p>Sen de asistan olunca ders kayıt zamanı sallarsın, gara guru zaten</p>
+                        </div>
+                        <div class="message received">
+                            <p>Hocam ayb oluo</p>
+                        </div>
+                        <div class="message sent">
+                            <p>Takma kafana</p>
+                        </div>
+                        <div class="message received">
+                            <p>He iyi bakam</p>
+                        </div>
+                        <div class="message sent">
+                            <p>Hadi allaha emanet</p>
+                        </div>
+                        <div class="message received">
+                            <p>Savul savuull</p>
+                        </div>
+                    </div>
+                    <div class="chat-footer p-3">
+                        <input type="text" class="form-control" placeholder="Type a message...">
+                        <button class="btn btn-danger mt-2">Stop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS ve Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

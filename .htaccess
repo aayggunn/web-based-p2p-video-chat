@@ -1,0 +1,8 @@
+# HTTPS kullanılmadığını kontrol et
+RewriteCond %{HTTPS} !=on
+
+# Let's Encrypt doğrulama dizinine yapılan istekleri hariç tut
+RewriteCond %{REQUEST_URI} !^/.well-known/acme-challenge/.*$
+
+# HTTPS'e yönlendirme işlemi
+RewriteRule ^(.*)$ https://www.0megle.online%{REQUEST_URI} [R=301,L]

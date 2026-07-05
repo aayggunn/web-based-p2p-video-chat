@@ -1,0 +1,150 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.container-fluid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px;
+}
+
+.row {
+    flex: 1;
+    display: flex;
+    margin: 0 -15px;
+}
+
+.col-md-8, .col-md-4 {
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.image-frame {
+    width: 70vh; /* Sabit kare çerçeve boyutu */
+    height: 70vh; /* Sabit kare çerçeve boyutu */
+    overflow: hidden;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 10px;   
+}
+
+.image-frame img {
+    max-width: 100%; /* Resmin genişliği kutuyu aşmasın */
+    max-height: 100%; /* Resmin yüksekliği kutuyu aşmasın */
+}
+
+.image-controls {
+    margin-top: 10px;
+}
+
+/* Buton Stilleri */
+.btn-start {
+    background-color: #28a745; /* Yeşil */
+    color: white;
+    padding: 40px 40px; /* Buton boyutunu büyüt */
+}
+
+.btn-stop {
+    background-color: #dc3545; /* Kırmızı */
+    color: white;
+    padding: 40px 40px; /* Buton boyutunu büyüt */
+}
+
+.btn-female {
+    background-color: #ff69b4; /* Açık pembe */
+    color: white;
+    padding: 40px 40px; /* Buton boyutunu büyüt */
+}
+
+.btn-male {
+    background-color: #87ceeb; /* Açık mavi */
+    color: white;
+    padding: 40px 40px; /* Buton boyutunu büyüt */
+}
+
+/* Çevrimiçi nokta stili */
+.online-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #28a745; /* Yeşil renk */
+    border-radius: 50%; /* Yuvarlak nokta */
+    margin-right: 5px; /* Nokta ile yazı arasına boşluk */
+}
+
+/* Çevrimiçi yazısını hizala */
+.online-status {
+    display: inline-flex;
+    align-items: center; /* Dikeyde ortala */
+}
+#localVideo {
+    transform: scaleX(-1);
+}
+
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 100vh; /* Mesajlaşma alanını ekranın altına kadar uzat */
+}
+
+.chat-header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto; /* Mesajlar uzadığında scroll bar çıkar */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    max-height: 70vh; /* Mesaj alanının maksimum yüksekliği */
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.message.received {
+    background-color: #f1f1f1;
+    margin-right: auto;
+}
+
+.message.sent {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+}
+
+.chat-footer {
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+}
+
+.chat-footer input {
+    border-radius: 20px;
+}
+
+.chat-footer button {
+    width: 100%;
+}
