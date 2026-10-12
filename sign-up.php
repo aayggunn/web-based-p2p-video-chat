@@ -45,7 +45,7 @@ if (isset($_POST["kaydet"])) {
                 $mail->isSMTP();
                 $mail->Host       = 'mail.0megle.online';$mail->SMTPAuth   = true;
                 $mail->Username   = 'noreply@0megle.online';
-                $mail->Password   = 'Q9.mtLD3Rsva3cb';$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Password   = '***';$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
 
                 $mail->setFrom('noreply@0megle.online', '0megle.online');
