@@ -25,11 +25,6 @@ The project ensures high performance and strict privacy by transmitting media di
 * **Security & Mail:** Prepared Statements (SQLi Protection), PHPMailer
 * **SEO:** Schema Markup, Open Graph, Twitter Cards
 
-## 📸 Screenshots
-
-*(You can add your project screenshots here)*
-> `![Home Page](link-here)`
-> `![Chat Room](link-here)`
 
 ## ⚙️ Installation and Setup
 
