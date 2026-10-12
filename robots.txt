@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /home-page.php
+Disallow: /connection.php
+Disallow: /matchmaker.php
+Disallow: /heartbeat.php
+Disallow: /logout.php
+Disallow: /google_login.php
+Allow: /
+
+Sitemap: https://0megle.online/sitemap.xml

@@ -1,693 +1,716 @@
 <?php
-// homepage.php
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-session_start();
-
-// Bağlantı dosyasını include et
 require_once 'connection.php';
 
-// Bağlantı kontrolü
 if (!isset($baglanti) || !$baglanti) {
-    die("Veritabanı bağlantısı kurulamadı.");
+    die("Veritabani baglantisi kurulamadi.");
 }
 
-// Kullanıcı giriş kontrolü
 if (!isset($_SESSION['member-id'])) {
     header("Location: login.php");
     exit();
 }
 
-$user_id = (int)$_SESSION['member-id'];
-$username = "Kullanıcı";
-$gender = null;
+$user_id = (int)$_SESSION['member-id'];$username = "Kullanici";
 
-// Sorguyu hazırla
-$query = "SELECT `user-name`, `gender` FROM `users` WHERE `member-id` = ?";
-$stmt = mysqli_prepare($baglanti, $query);
+$query = "SELECT `user-name` FROM `users` WHERE `member-id` = ?";
+$stmt = mysqli_prepare($baglanti,$query);
+
 if ($stmt) {
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $db_username, $db_gender);
+    mysqli_stmt_bind_result($stmt,$db_username);
     if (mysqli_stmt_fetch($stmt)) {
-        $username = $db_username;
-        $gender = $db_gender;
+        $username =$db_username;
     }
     mysqli_stmt_close($stmt);
 }
-
-/* ---------------- DİL SİSTEMİ ---------------- */
-if (isset($_GET['lang'])) {
-    $_SESSION['lang'] = $_GET['lang'];
-} elseif (!isset($_SESSION['lang'])) {
-    $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'tr', 0, 2);
-    $_SESSION['lang'] = ($browserLang == 'tr') ? 'tr' : 'en';
-}
-$currentLang = $_SESSION['lang'];
-
-$texts = [
-    'tr' => [
-        'title' => '0megle.online | Görüntülü Sohbet',
-        'logout' => 'Çıkış Yap',
-        'you' => 'Siz',
-        'remote' => 'Karşıdaki Kullanıcı',
-        'status_searching' => 'Eşleşme aranıyor...',
-        'status_connecting' => 'Bağlantı kuruluyor...',
-        'status_connected' => 'Bağlantı kuruldu!',
-        'status_ended' => 'Görüşme sonlandırıldı.',
-        'status_partner_left' => 'Karşı taraf ayrıldı, yeni kişi aranıyor...',
-        'status_error' => 'Sistem hatası, lütfen yeniden deneyin',
-        'status_cam_error' => 'Kamera/mikrofon erişimine izin vermelisiniz',
-        'status_peer_error' => 'Bağlantı hatası: ',
-        'btn_start' => 'Kamerayı Aç',
-        'btn_starting' => 'Kamera Açılıyor...',
-        'btn_active' => 'Kamera Aktif',
-        'btn_retry_cam' => 'İzin Ver ve Tekrar Dene',
-        'btn_retry' => 'Yeniden Dene',
-        'btn_next' => 'Sonraki Kişi',
-        'btn_stop' => 'Görüşmeyi Bitir',
-    ],
-    'en' => [
-        'title' => '0megle.online | Video Chat',
-        'logout' => 'Log Out',
-        'you' => 'You',
-        'remote' => 'Stranger',
-        'status_searching' => 'Looking for a match...',
-        'status_connecting' => 'Connecting...',
-        'status_connected' => 'Connected!',
-        'status_ended' => 'Call ended.',
-        'status_partner_left' => 'Partner left, searching for a new one...',
-        'status_error' => 'System error, please try again',
-        'status_cam_error' => 'You must allow camera/microphone access',
-        'status_peer_error' => 'Connection error: ',
-        'btn_start' => 'Turn on Camera',
-        'btn_starting' => 'Starting Camera...',
-        'btn_active' => 'Camera Active',
-        'btn_retry_cam' => 'Allow and Try Again',
-        'btn_retry' => 'Try Again',
-        'btn_next' => 'Next Person',
-        'btn_stop' => 'End Call',
-    ]
-];
-$lang = $texts[$currentLang];
 ?>
 <!DOCTYPE html>
-<html lang="<?= $currentLang ?>">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title><?= $lang['title'] ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- SEO Optimizasyonu -->
+    <title>Sohbet Odası | 0megle.online - Rastgele Görüntülü Sohbet</title>
+    <meta name="description" content="0megle.online ile anında rastgele görüntülü sohbete başla. Yeni insanlarla tanış, sınırları kaldır.">
+    <!-- DİKKAT: Bu sayfa kullanıcı girişi gerektirdiği için arama motorlarına kapalı kalmalıdır (noindex) -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn Paylaşım Etiketleri) -->
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://0megle.online/home-page.php">
+    <meta property="og:site_name" content="0megle.online">
+    <meta property="og:title" content="Canlı Sohbet Odası | 0megle.online">
+    <meta property="og:description" content="0megle.online ile anında rastgele görüntülü sohbete başla.">
+    <meta property="og:image" itemprop="image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+    <meta property="og:image:secure_url" itemprop="image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Meta Etiketleri -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="0megle.online - Canlı Sohbet Odası">
+    <meta name="twitter:description" content="Sınırları kaldır, yeni insanlarla anında tanış. Ücretsiz rastgele video sohbet ağı.">
+    <meta name="twitter:image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+    
+    <!-- Sekme (Favicon) Logosu -->
+    <link rel="icon" href="0megle-online-rastgele-sohbet-logo.jpg?v=2" type="image/jpeg">
+    <link rel="apple-touch-icon" href="0megle-online-rastgele-sohbet-logo.jpg?v=2">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        :root {
-            --primary-color: #1e90ff;
-            --primary-hover: #0073e6;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --glass-bg: rgba(25, 25, 35, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.08);
-        }
+        /* Genel Tasarım & Koyu Tema */
         body {
+            background-color: #0f172a;
+            color: #f8fafc;
             font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(circle at top, #14142b 0%, #05050f 100%);
-            color: #fff;
-            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
-        header {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 15px 0;
+
+        /* Glassmorphism Header */
+        .app-header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+
         .brand-logo {
-            font-weight: 600;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            margin: 0;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 0.5px;
         }
-        .brand-logo .text-dodgerblue { color: var(--primary-color); }
-        .user-info {
+        
+        .brand-logo span {
+            color: #3b82f6;
+        }
+
+        .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-        .user-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), #8a2be2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            text-align: right;
-        }
-        .user-details span {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        .user-details a {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.8rem;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .user-details a:hover { color: var(--danger-color); }
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 30px 0;
-        }
-        .video-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 30px;
-            width: 100%;
-        }
-        .video-box {
-            flex: 1;
-            max-width: 650px;
-            aspect-ratio: 4 / 3;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-box::before {
-            content: attr(data-label);
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 400;
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 15px 5px 5px;
+            border-radius: 50px;
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .video-box::after {
-            content: '\f03d';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            font-size: 4rem;
-            color: rgba(255,255,255,0.05);
-            z-index: 1;
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
-        video {
+
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .logout-link {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .logout-link:hover {
+            color: #ef4444;
+        }
+
+        /* Video Alanı Tasarımı (16:9 Geniş Ekran Olarak Güncellendi) */
+        .video-wrapper {
+            position: relative;
+            background: #1e293b;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .video-wrapper video {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            background: #000;
+        }
+
+        #localVideo {
+            transform: scaleX(-1);
+        }
+
+        .video-badge {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 6px 14px;
             border-radius: 20px;
-            z-index: 5;
-            position: relative;
-            background-color: #000;
-            opacity: 0; 
-            transition: opacity 0.3s ease-in-out; 
-        }
-        #localVideo, #remoteVideo { transform: scaleX(-1); }
-        .status-info {
-            text-align: center;
-            margin: 0 auto 30px;
-            padding: 12px 25px;
-            background: rgba(30, 144, 255, 0.15);
-            border: 1px solid rgba(30, 144, 255, 0.3);
-            border-radius: 30px;
-            display: none;
-            width: fit-content;
-            backdrop-filter: blur(5px);
-            animation: pulse 2s infinite;
-        }
-        .status-info i { margin-right: 8px; color: var(--primary-color); }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(30, 144, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0); }
-        }
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            background: var(--glass-bg);
-            padding: 20px 40px;
-            border-radius: 40px;
-            width: fit-content;
-            margin: 0 auto;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-        }
-        button {
-            padding: 14px 35px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1.05rem;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #fff;
             display: flex;
             align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-green { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .dot-blue { background-color: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+
+        /* Modern Status (Bildirim) Kutusu */
+        #statusInfo {
+            display: none;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-align: center;
+            margin: 20px auto 0 auto;
+            max-width: 600px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        #statusInfo i {
+            margin-right: 8px;
+        }
+
+        /* Durum Kutusu Animasyonu */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .status-searching {
+            animation: pulse-glow 2s infinite;
+        }
+
+        /* Kontrol Butonları Tasarımı */
+        .controls-area {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .action-btn {
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: white;
+            width: 100%;
         }
-        #startBtn { background-color: var(--primary-color); }
-        #startBtn:hover:not(:disabled) { background-color: var(--primary-hover); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(30, 144, 255, 0.4); }
-        #nextBtn { background-color: var(--warning-color); }
-        #nextBtn:hover:not(:disabled) { background-color: #e67e22; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4); }
-        #stopBtn { background-color: var(--danger-color); }
-        #stopBtn:hover:not(:disabled) { background-color: #c0392b; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
-        button:disabled {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.3);
+
+        .action-btn i {
+            font-size: 1.1rem;
+        }
+
+        #startBtn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        #startBtn:not(:disabled):hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        #nextBtn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        #nextBtn:not(:disabled):hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        #stopBtn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        #stopBtn:not(:disabled):hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .action-btn:disabled {
+            background: #334155 !important;
+            box-shadow: none !important;
+            color: #64748b;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+            transform: none !important;
         }
+
         @media (max-width: 768px) {
-            .video-container { flex-direction: column; gap: 20px; }
-            .video-box { width: 100%; max-width: 100%; border-radius: 15px; }
-            .video-box::before { bottom: 10px; left: 10px; font-size: 0.8rem; }
-            .controls {
-                width: 100%;
-                border-radius: 20px;
-                padding: 15px;
-                flex-direction: column;
-                box-sizing: border-box;
+            .app-header {
+                padding: 10px 0;
             }
-            button { width: 100%; justify-content: center; padding: 15px; }
+            .video-wrapper {
+                margin-bottom: 15px;
+            }
+            .controls-area {
+                padding: 15px;
+                background: transparent;
+                border: none;
+                margin-top: 10px;
+            }
+            .action-btn {
+                padding: 14px 20px;
+                font-size: 1.05rem;
+            }
+            .btn-col {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
-
-    <header>
-        <div class="container header-content">
-            <h1 class="brand-logo">
-                <a href="index.html" class="text-white" style="text-decoration: none;">0MEGLE<span class="text-dodgerblue">.ONLINE</span></a>
-            </h1>
-            <div class="user-info">
-                <div class="user-details">
-                    <span><?= htmlspecialchars($username) ?></span>
-                    <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <?= $lang['logout'] ?></a>
+    
+    <header class="app-header py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="#" class="brand-logo">
+                0MEGLE<span>.ONLINE</span>
+            </a>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <?php echo strtoupper(substr($username, 0, 1)); ?>
                 </div>
-                <div class="user-avatar"><?= strtoupper(substr($username, 0, 1)) ?></div>
+                <div class="user-info-text d-none d-sm-flex">
+                    <span class="user-name"><?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <a href="logout.php" class="logout-link"><i class="fas fa-sign-out-alt me-1"></i>Güvenli Çıkış</a>
+                </div>
+                <!-- Mobil için sadece ikonlu çıkış -->
+                <a href="logout.php" class="logout-link d-flex d-sm-none ms-2 me-2" style="font-size: 1.2rem;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
             </div>
         </div>
     </header>
 
-    <div class="main-content container">
-        
-        <div class="video-container">
-            <div class="video-box" data-label="<?= $lang['you'] ?>">
-                <video id="localVideo" autoplay muted playsinline></video>
+    <main class="container py-4 flex-grow-1">
+        <div class="row g-4 justify-content-center">
+            <!-- Videolar PC'de col-lg-6 ile daha büyük hale getirildi -->
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="video-wrapper">
+                    <div class="video-badge">
+                        <div class="badge-dot dot-blue"></div>
+                        Siz
+                    </div>
+                    <video id="localVideo" autoplay muted playsinline></video>
+                </div>
             </div>
-            <div class="video-box" id="remoteVideoBox" data-label="<?= $lang['remote'] ?>">
-                <video id="remoteVideo" autoplay playsinline></video>
+            
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="video-wrapper">
+                    <div class="video-badge">
+                        <div class="badge-dot dot-green"></div>
+                        <!-- İsim alanı ID ile dinamikleştirildi -->
+                        <span id="remoteUserName">Yabancı</span>
+                    </div>
+                    <video id="remoteVideo" autoplay playsinline></video>
+                </div>
             </div>
         </div>
 
-        <div class="status-info" id="statusInfo">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span id="statusText"><?= $lang['status_searching'] ?></span>
+        <div id="statusInfo">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <span id="statusText">Eşleşme aranıyor...</span>
         </div>
 
-        <div class="controls">
-            <button id="startBtn">
-                <i class="fas fa-video"></i> <?= $lang['btn_start'] ?>
-            </button>
-            <button id="nextBtn" disabled>
-                <i class="fas fa-random"></i> <?= $lang['btn_next'] ?>
-            </button>
-            <button id="stopBtn" disabled>
-                <i class="fas fa-phone-slash"></i> <?= $lang['btn_stop'] ?>
-            </button>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="controls-area">
+                    <div class="row">
+                        <div class="col-12 col-md-4 btn-col">
+                            <button id="startBtn" class="action-btn">
+                                <i class="fas fa-video"></i> Aramayı Başlat
+                            </button>
+                        </div>
+                        <div class="col-12 col-md-4 btn-col">
+                            <button id="nextBtn" class="action-btn" disabled>
+                                <i class="fas fa-forward-step"></i> Geç / Sonraki
+                            </button>
+                        </div>
+                        <div class="col-12 col-md-4 btn-col">
+                            <button id="stopBtn" class="action-btn" disabled>
+                                <i class="fas fa-phone-slash"></i> Görüşmeyi Bitir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
+    </main>
+
+    <!-- PeerJS Kütüphanesi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.4.7/peerjs.min.js"></script>
 
+   <!-- ÖZEL JS VE YENİ ÖZELLİKLER -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const trans = {
-            searching: <?= json_encode($lang['status_searching']) ?>,
-            connecting: <?= json_encode($lang['status_connecting']) ?>,
-            connected: <?= json_encode($lang['status_connected']) ?>,
-            ended: <?= json_encode($lang['status_ended']) ?>,
-            partner_left: <?= json_encode($lang['status_partner_left']) ?>,
-            sys_error: <?= json_encode($lang['status_error']) ?>,
-            cam_error: <?= json_encode($lang['status_cam_error']) ?>,
-            peer_error: <?= json_encode($lang['status_peer_error']) ?>,
-            remote: <?= json_encode($lang['remote']) ?>,
-            btn_start: <?= json_encode($lang['btn_start']) ?>,
-            btn_starting: <?= json_encode($lang['btn_starting']) ?>,
-            btn_active: <?= json_encode($lang['btn_active']) ?>,
-            btn_retry_cam: <?= json_encode($lang['btn_retry_cam']) ?>,
-            btn_retry: <?= json_encode($lang['btn_retry']) ?>
-        };
-
         const startBtn = document.getElementById('startBtn');
         const nextBtn = document.getElementById('nextBtn');
         const stopBtn = document.getElementById('stopBtn');
         const localVideo = document.getElementById('localVideo');
         const remoteVideo = document.getElementById('remoteVideo');
-        const remoteVideoBox = document.getElementById('remoteVideoBox');
         const statusInfo = document.getElementById('statusInfo');
         const statusText = document.getElementById('statusText');
+        const remoteUserName = document.getElementById('remoteUserName'); 
         
-        let peer;
-        let currentCall;
-        let localStream;
-        let currentSessionId;
-        let heartbeatInterval;
-        let matchmakingInterval;
-        const userId = <?= json_encode($user_id) ?>;
-        
-        let isSearching = false;
-        let intentionallyEnded = false;
+        // YENİ: Kendi ismimizi JavaScript'e alıyoruz ki arama yaparken karşıya anında gönderebilelim
+        const myUserName = "<?php echo addslashes(htmlspecialchars($username, ENT_QUOTES, 'UTF-8')); ?>";
 
-        // --- ORTAK KOPMA ALGILAYICI ---
-        const handleDisconnect = () => {
-            if (!intentionallyEnded && !isSearching) {
-                intentionallyEnded = true; // Tekrarlı tetiklenmeyi önle
-                endCall();
-                
-                // Karşı tarafa anında bildirim göster
-                statusInfo.style.display = 'block';
-                statusText.textContent = trans.partner_left;
-                statusInfo.querySelector('i').className = 'fas fa-exclamation-circle';
-                
-                // 1.5 Saniye sonra otomatik yeni aramaya fırlat
-                if (peer) {
-                    setTimeout(() => {
-                        intentionallyEnded = false; 
-                        startMatchmaking(peer.id);
-                    }, 1500);
-                }
+        let state = 'idle';
+        let peer = null;
+        let currentCall = null;
+        let localStream = null;
+        let heartbeatInterval = null;
+        let matchmakingTimer = null;
+        let connectTimer = null;
+        let searchSeq = 0; 
+        const CONNECT_TIMEOUT_MS = 15000;
+
+        function showStatus(text, type = 'spin') {
+            let iconHtml = '';
+            if (type === 'spin') {
+                iconHtml = '<i class="fas fa-circle-notch fa-spin"></i>';
+                statusInfo.classList.add('status-searching');
+            } else if (type === 'success') {
+                iconHtml = '<i class="fas fa-check-circle" style="color: #22c55e;"></i>';
+                statusInfo.classList.remove('status-searching');
+            } else if (type === 'error') {
+                iconHtml = '<i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>';
+                statusInfo.classList.remove('status-searching');
             }
-        };
+            
+            statusInfo.innerHTML = iconHtml + ' <span id="statusText">' + text + '</span>';
+            statusInfo.style.display = 'block';
+        }
 
-        function initializeUser(peerId) {
-            fetch('matchmaker.php', {
+        function postJSON(url, body) {
+            return fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, peer_id: peerId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'matched') {
-                    handleMatch(data);
-                } else {
-                    startMatchmaking(peerId);
+                body: JSON.stringify(body || {})
+            }).then(function(response) {
+                if (response.status === 401) {
+                    window.location.href = 'login.php';
+                    throw new Error('Oturum süresi doldu');
                 }
-            })
-            .catch(error => {
-                console.error('API Error:', error);
-                statusText.textContent = trans.sys_error;
-                statusInfo.querySelector('i').className = 'fas fa-exclamation-triangle';
+                return response.json();
             });
         }
 
-        function startMatchmaking(peerId) {
-            if (isSearching) return;
-            isSearching = true;
-            intentionallyEnded = false; 
-            
-            statusInfo.style.display = 'block';
-            statusText.textContent = trans.searching;
-            statusInfo.querySelector('i').className = 'fas fa-spinner fa-spin';
-            
+        function randomPeerId() {
+            const bytes = new Uint8Array(12);
+            crypto.getRandomValues(bytes);
+            return 'p_' + Array.from(bytes, function(b) {
+                return b.toString(16).padStart(2, '0');
+            }).join('');
+        }
+
+        function notifyLeave() {
+            navigator.sendBeacon('leave.php');
+        }
+
+        function search(action) {
+            const seq = ++searchSeq;
+            postJSON('matchmaker.php', {
+                action: action,
+                peer_id: peer.id
+            })
+            .then(function(data) {
+                if (seq !== searchSeq || state !== 'searching') return;
+                handleMatchmakerResponse(data);
+            })
+            .catch(function(error) {
+                console.error('Eşleşme hatası:', error);
+                if (seq === searchSeq && state === 'searching') scheduleNextPoll();
+            });
+        }
+
+        function scheduleNextPoll() {
+            clearTimeout(matchmakingTimer);
+            const randomDelay = Math.floor(Math.random() * 4000) + 1000;
+            matchmakingTimer = setTimeout(function() {
+                if (state === 'searching') search('poll');
+            }, randomDelay);
+        }
+
+        function startMatchmaking() {
+            clearTimeout(matchmakingTimer);
+            clearTimeout(connectTimer);
+            state = 'searching';
             startBtn.disabled = true;
             nextBtn.disabled = true;
-            stopBtn.disabled = false; 
-
-            const checkForMatch = () => {
-                if (!isSearching) return;
-
-                fetch('matchmaker.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, peer_id: peerId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'matched') {
-                        handleMatch(data);
-                    } else {
-                        const randomDelay = Math.floor(Math.random() * 4000) + 1000;
-                        matchmakingInterval = setTimeout(checkForMatch, randomDelay);
-                    }
-                })
-                .catch(error => {
-                    const randomDelay = Math.floor(Math.random() * 4000) + 1000;
-                    matchmakingInterval = setTimeout(checkForMatch, randomDelay);
-                });
-            };
-
-            checkForMatch();
+            stopBtn.disabled = false;
+            remoteUserName.textContent = 'Aranıyor...'; 
+            showStatus('Eşleşme aranıyor...', 'spin');
+            search('join');
         }
 
-        function handleMatch(data) {
-            clearTimeout(matchmakingInterval);
-            isSearching = false;
-            currentSessionId = data.session_id;
-            statusText.textContent = trans.connecting;
-            statusInfo.querySelector('i').className = 'fas fa-link';
-            
-            let partnerName = (data.partner_username && data.partner_username !== "null") ? data.partner_username : trans.remote;
-            remoteVideoBox.setAttribute('data-label', partnerName);
-            
-            connectToPartner(data.partner_peer_id);
+        function handleMatchmakerResponse(data) {
+            if (data.status === 'matched') {
+                clearTimeout(matchmakingTimer);
+                state = 'connecting';
+                remoteUserName.textContent = data.partner_name || 'Kullanıcı'; 
+                showStatus('Eşleşme bulundu! Bağlantı kuruluyor...', 'spin');
+                armConnectTimeout();
+                // YENİ: Aramayı başlatırken, kendi ismimizi "metadata" ile doğrudan sinyalin içine gömüyoruz
+                setupCall(peer.call(data.partner_peer_id, localStream, { metadata: { callerName: myUserName } }));
+            } else if (data.status === 'in_call') {
+                clearTimeout(matchmakingTimer);
+                state = 'connecting';
+                remoteUserName.textContent = data.partner_name || 'Kullanıcı';
+                showStatus('Eşleşme bulundu! Karşı tarafın bağlanması bekleniyor...', 'spin');
+                armConnectTimeout();
+            } else if (data.status === 'waiting') {
+                scheduleNextPoll();
+            } else {
+                showStatus('Sistem hatası, yeniden deneniyor...', 'error');
+                scheduleNextPoll();
+            }
         }
 
-        function startHeartbeat() {
-            if (heartbeatInterval) clearInterval(heartbeatInterval);
-            sendHeartbeat();
-            heartbeatInterval = setInterval(sendHeartbeat, 10000);
-        }
-
-        function sendHeartbeat() {
-            fetch('heartbeat.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, session_id: currentSessionId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'session_ended' && currentSessionId) {
-                    handleDisconnect();
+        function armConnectTimeout() {
+            clearTimeout(connectTimer);
+            connectTimer = setTimeout(function() {
+                if (state === 'connecting') {
+                    showStatus('Bağlantı kurulamadı, yeni eşleşme aranıyor...', 'error');
+                    endCall(false);
+                    startMatchmaking();
                 }
-            })
-            .catch(e => console.log(e));
-        }
-
-        function connectToPartner(partnerPeerId) {
-            const call = peer.call(partnerPeerId, localStream);
-            setupCall(call);
+            }, CONNECT_TIMEOUT_MS);
         }
 
         function setupCall(call) {
             currentCall = call;
-            intentionallyEnded = false; 
-
-            if (call.peerConnection) {
-                call.peerConnection.oniceconnectionstatechange = function() {
-                    let state = call.peerConnection.iceConnectionState;
-                    if (state === 'disconnected' || state === 'failed' || state === 'closed') {
-                        handleDisconnect();
-                    }
-                };
-                call.peerConnection.onconnectionstatechange = function() {
-                    let state = call.peerConnection.connectionState;
-                    if (state === 'disconnected' || state === 'failed' || state === 'closed') {
-                        handleDisconnect();
-                    }
-                };
-            }
 
             call.on('stream', function(remoteStream) {
+                clearTimeout(connectTimer);
+                state = 'connected';
                 remoteVideo.srcObject = remoteStream;
-                remoteVideo.style.opacity = '1'; 
-                
                 nextBtn.disabled = false;
                 stopBtn.disabled = false;
                 startBtn.disabled = true;
-                statusText.textContent = trans.connected;
-                statusInfo.querySelector('i').className = 'fas fa-check-circle';
-                
-                setTimeout(() => {
-                    if(!isSearching) statusInfo.style.display = 'none';
-                }, 3000);
+                showStatus('Bağlantı kuruldu!', 'success'); 
             });
 
-            call.on('close', handleDisconnect);
-            call.on('error', handleDisconnect);
+            if (call.peerConnection) {
+                call.peerConnection.onconnectionstatechange = function() {
+                    const pcState = call.peerConnection.connectionState;
+                    if (pcState === 'disconnected' || pcState === 'failed' || pcState === 'closed') {
+                        handleRemoteDisconnect();
+                    }
+                };
+                call.peerConnection.oniceconnectionstatechange = function() {
+                    const iceState = call.peerConnection.iceConnectionState;
+                    if (iceState === 'disconnected' || iceState === 'failed' || iceState === 'closed') {
+                        handleRemoteDisconnect();
+                    }
+                };
+            }
+
+            call.on('close', handleRemoteDisconnect);
+            call.on('error', function(err) {
+                console.error('Çağrı hatası:', err);
+                handleRemoteDisconnect();
+            });
+
+            function handleRemoteDisconnect() {
+                if (currentCall === call && state === 'connected') {
+                    endCall(false);
+                    startMatchmaking(); 
+                }
+            }
         }
 
-        function endCall() {
-            if (currentCall) {
-                if (currentCall.peerConnection) {
-                    try { currentCall.peerConnection.close(); } catch(e) {}
-                }
-                try { currentCall.close(); } catch(e) {}
-                currentCall = null;
-            }
+        function endCall(notifyServer) {
+            if (notifyServer === undefined) notifyServer = true;
 
-            if (currentSessionId) {
-                fetch('leave.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, session_id: currentSessionId })
-                });
-                currentSessionId = null;
-            }
+            searchSeq++; 
+            clearTimeout(matchmakingTimer);
+            clearTimeout(connectTimer);
+
+            const call = currentCall;
+            currentCall = null; 
+            if (call) call.close();
+
+            if (notifyServer) notifyLeave();
 
             remoteVideo.srcObject = null;
-            remoteVideo.removeAttribute('src');
-            try { remoteVideo.load(); } catch(e) {}
-            remoteVideo.style.opacity = '0';
-            
+            remoteVideo.load(); 
+            remoteUserName.textContent = 'Yabancı'; 
+
+            state = 'idle';
             nextBtn.disabled = true;
             stopBtn.disabled = true;
-            startBtn.disabled = true; 
-            isSearching = false;
-            clearTimeout(matchmakingInterval);
-            
-            remoteVideoBox.setAttribute('data-label', trans.remote);
+            startBtn.disabled = false;
+        }
+
+        function sendHeartbeat() {
+            fetch('heartbeat.php', { method: 'POST' }).catch(function(error) {
+                console.error('Heartbeat error:', error);
+            });
+        }
+
+        function startHeartbeat() {
+            clearInterval(heartbeatInterval);
+            sendHeartbeat();
+            heartbeatInterval = setInterval(sendHeartbeat, 10000);
         }
 
         startBtn.addEventListener('click', function() {
-            startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + trans.btn_starting;
-            
+            if (localStream && peer && !peer.destroyed && peer.open) {
+                startMatchmaking();
+                return;
+            }
+
+            startBtn.disabled = true;
             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                 .then(function(stream) {
                     localStream = stream;
                     localVideo.srcObject = stream;
-                    localVideo.style.opacity = '1'; 
-                    
-                    startBtn.disabled = true;
-                    startBtn.innerHTML = '<i class="fas fa-video"></i> ' + trans.btn_active;
 
-                    const peerId = 'user_' + userId + '_' + Math.random().toString(36).substr(2, 9);
-                    peer = new Peer(peerId, {
+                    peer = new Peer(randomPeerId(), {
                         host: '0.peerjs.com',
                         port: 443,
                         secure: true,
                         debug: 3
                     });
 
-                    peer.on('open', function(id) {
-                        initializeUser(id);
+                    peer.on('open', function() {
+                        startMatchmaking(); 
                         startHeartbeat();
-                        stopBtn.disabled = false; 
                     });
 
                     peer.on('call', function(call) {
+                        if (currentCall || (state !== 'searching' && state !== 'connecting')) {
+                            call.close();
+                            return;
+                        }
+                        clearTimeout(matchmakingTimer);
+                        if (state === 'searching') {
+                            state = 'connecting';
+                            armConnectTimeout();
+                        }
+                        
+                        // YENİ: Bize çağrı düştüğü anda, karşı tarafın sinyalin içine gömdüğü ismi okuyup ekrana basıyoruz
+                        if (call.metadata && call.metadata.callerName) {
+                            remoteUserName.textContent = call.metadata.callerName;
+                        } else if (remoteUserName.textContent === 'Aranıyor...') {
+                            remoteUserName.textContent = 'Kullanıcı';
+                        }
+
+                        showStatus('Bağlantı kuruluyor...', 'spin');
                         call.answer(localStream);
                         setupCall(call);
                     });
 
                     peer.on('error', function(err) {
-                        statusInfo.style.display = 'block';
-                        statusText.textContent = trans.peer_error + err.message;
-                        statusInfo.querySelector('i').className = 'fas fa-exclamation-triangle';
-                        startBtn.disabled = false;
-                        startBtn.innerHTML = '<i class="fas fa-video"></i> ' + trans.btn_retry;
+                        if (err.type === 'peer-unavailable' && state === 'connecting') {
+                            showStatus('Karşı taraf bağlanamadı, yeni eşleşme aranıyor...', 'error');
+                            endCall(false);
+                            startMatchmaking();
+                        } else {
+                            showStatus('Bağlantı hatası: ' + err.message, 'error');
+                        }
                     });
                 })
                 .catch(function(err) {
-                    statusInfo.style.display = 'block';
-                    statusText.textContent = trans.cam_error;
-                    statusInfo.querySelector('i').className = 'fas fa-camera-slash';
-                    startBtn.innerHTML = '<i class="fas fa-video"></i> ' + trans.btn_retry_cam;
+                    startBtn.disabled = false;
+                    showStatus('Kamera/mikrofon erişimine izin vermelisiniz', 'error');
                 });
         });
 
         nextBtn.addEventListener('click', function() {
-            intentionallyEnded = true; 
-            endCall();
-            
-            if (peer) {
-                startMatchmaking(peer.id);
-                stopBtn.disabled = false;
-            }
+            if (!peer) return;
+            endCall(false);      
+            startMatchmaking();
         });
 
         stopBtn.addEventListener('click', function() {
-            intentionallyEnded = true; 
-            endCall(); // İlk önce leave.php çağrılır ve WebRTC kanalları kapatılır.
-            
-            // DÜZELTME: Soketin tamamen yok edilmesini (destroy) 400ms geciktiriyoruz.
-            // Bu sayede sinyal sunucu üzerinden karşı tarafa pürüzsüzce ulaşabiliyor.
-            setTimeout(() => {
-                if (localStream) {
-                    localStream.getTracks().forEach(track => track.stop());
-                    localStream = null;
-                    localVideo.srcObject = null;
-                    localVideo.removeAttribute('src');
-                    localVideo.load();
-                    localVideo.style.opacity = '0'; 
-                }
-                if (peer) {
-                    peer.destroy();
-                    peer = null;
-                }
-            }, 400);
-            
-            statusInfo.style.display = 'block';
-            statusText.textContent = trans.ended;
-            statusInfo.querySelector('i').className = 'fas fa-info-circle';
-            
-            startBtn.disabled = false;
-            startBtn.innerHTML = '<i class="fas fa-video"></i> ' + trans.btn_start;
-            stopBtn.disabled = true;
+            endCall();           
+            if (localStream) {
+                localStream.getTracks().forEach(function(track) { track.stop(); });
+                localStream = null;
+                localVideo.srcObject = null;
+                localVideo.load();
+            }
+            if (peer) {
+                peer.destroy();
+                peer = null;
+            }
+            clearInterval(heartbeatInterval);
+            statusInfo.style.display = 'none';
         });
 
         window.addEventListener('beforeunload', function() {
             if (peer) peer.destroy();
-            const url = 'leave.php';
-            const data = JSON.stringify({ user_id: userId });
-            navigator.sendBeacon(url, data);
+            notifyLeave();
         });
     });
     </script>

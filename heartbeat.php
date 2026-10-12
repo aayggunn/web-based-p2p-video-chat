@@ -1,44 +1,39 @@
 <?php
-header('Content-Type: application/json');
-require_once 'connection.php';
+// heartbeat.php: istemci 10 saniyede bir çağırır, kullanıcıyı "çevrimiçi" tutar
+ini_set('display_errors', '0');
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
 
-$data = json_decode(file_get_contents('php://input'), true);
-$user_id = isset($data['user_id']) ? (int)$data['user_id'] : 0;
-$session_id = isset($data['session_id']) ? mysqli_real_escape_string($baglanti, $data['session_id']) : null;
-
-if (!$user_id) {
-    echo json_encode(['status' => 'error', 'message' => 'Geçersiz veri']);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['status' => 'error']);
     exit;
 }
 
-// 1. Düşen kişilerin (15 sn sinyal yok) asılı kalan partnerlerini serbest bırak
-mysqli_query($baglanti, "
-    UPDATE online_users 
-    SET status = 'waiting', matched_with = NULL, session_id = NULL 
-    WHERE matched_with IN (
-        SELECT user_id FROM (
-            SELECT user_id FROM online_users WHERE last_ping < NOW() - INTERVAL 15 SECOND
-        ) as subquery
-    )
-");
-
-// 2. Zombi kayıtları sil
-mysqli_query($baglanti, "
-    DELETE FROM online_users 
-    WHERE last_ping < NOW() - INTERVAL 15 SECOND
-");
-
-// Kullanıcının last_ping bilgisini güncelle
-if ($session_id) {
-    $stmt = mysqli_prepare($baglanti, "UPDATE online_users SET last_ping = NOW() WHERE user_id = ? AND session_id = ?");
-    mysqli_stmt_bind_param($stmt, "is", $user_id, $session_id);
-} else {
-    $stmt = mysqli_prepare($baglanti, "UPDATE online_users SET last_ping = NOW() WHERE user_id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $user_id);
+session_start();
+if (!isset($_SESSION['member-id'])) {
+    http_response_code(401);
+    echo json_encode(['status' => 'error']);
+    exit;
 }
+$user_id = (int)$_SESSION['member-id'];
+session_write_close();
 
-mysqli_stmt_execute($stmt);
-mysqli_stmt_close($stmt);
+try {
+    require_once 'connection.php';
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-echo json_encode(['status' => 'ok']);
-?>
+    $s = $baglanti->prepare('UPDATE online_users SET last_ping = NOW() WHERE user_id = ?');
+    $s->bind_param('i', $user_id);
+    $s->execute();
+    $s->close();
+
+    // matchmaker.php ile aynı süre (30 sn); aksi halde aktif kullanıcılar bile silinebilir
+    $baglanti->query('DELETE FROM online_users WHERE last_ping < NOW() - INTERVAL 30 SECOND');
+
+    echo json_encode(['status' => 'updated']);
+} catch (Throwable $e) {
+    error_log('heartbeat: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['status' => 'error']);
+}

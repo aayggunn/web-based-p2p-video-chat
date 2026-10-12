@@ -2,147 +2,365 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="robots" content="index, follow">
-  <meta name="description" id="meta-desc" content="0megle.online ile rastgele insanlarla eşleş, görüntülü konuş">
-  <meta name="keywords" content="0megle, 0megle.online, yerli omegle, omegle, omegle.fun, omegle.live, ome.tv, video chat, random video chat, azar, connected2me">
-  <title id="page-title">0megle.online | Yeni İnsanlarla Tanış</title>
-  <link rel="icon" href="IMG-20240709-WA0003.jpg" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#0f172a">
+  
+  <!-- Temel SEO Optimizasyonu -->
+  <title>0megle.online | Rastgele Görüntülü Sohbet ve Yeni İnsanlarla Tanışma</title>
+  <meta name="description" content="0megle.online ile dünyanın her yerinden insanlarla ücretsiz rastgele görüntülü sohbet et, anında yeni arkadaşlar edin. Sınırları kaldır, şimdi sohbete başla!">
+  <meta name="keywords" content="omegle, omegle alternatif, rastgele sohbet, görüntülü sohbet, chat rulet, arkadaş bulma, canlı sohbet, ome.tv, azar, connected2me, video chat">
+  <meta name="author" content="0megle.online">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://0megle.online" />
+
+  <!-- WhatsApp ve Sosyal Medya Link Önizleme Görseli (Open Graph) -->
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://0megle.online">
+  <meta property="og:site_name" content="0megle.online">
+  <meta property="og:title" content="0megle.online | Ücretsiz Rastgele Görüntülü Sohbet">
+  <meta property="og:description" content="Dünyanın her yerinden yeni insanlarla tanışın. Kayıt ol, kameranı aç ve anında rastgele görüntülü sohbete başla.">
+  <meta property="og:image" itemprop="image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+  <meta property="og:image:secure_url" itemprop="image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card Meta Etiketleri -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="0megle.online - Görüntülü Sohbet">
+  <meta name="twitter:description" content="Sınırları kaldır, yeni insanlarla anında tanış. Ücretsiz rastgele video sohbet ağı.">
+  <meta name="twitter:image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+  
+  <!-- Sekme (Favicon) Logosu -->
+  <link rel="icon" href="0megle-online-rastgele-sohbet-logo.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="0megle-online-rastgele-sohbet-logo.jpg">
+  
+  <!-- Yapısal Veri (Schema Markup) - Google Botları İçin Web Uygulaması Tanımı -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "0megle.online",
+    "url": "https://0megle.online/",
+    "description": "Ücretsiz rastgele görüntülü sohbet ve anında yeni insanlarla tanışma platformu.",
+    "applicationCategory": "CommunicationApplication",
+    "operatingSystem": "All",
+    "inLanguage": "tr-TR"
+  }
+  </script>
+  
+  <!-- CSS Kütüphaneleri -->
   <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
   <link rel="stylesheet" href="jqueryui/jquery-ui.css">
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="fontawesome/css/all.min.css">
+  
+  <!-- Google Fonts Hızlandırması (Preconnect) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+  
+  <!-- Hero / Üst Kısım -->
   <section class="container-fluid bolum1" id="hero">
-    <div class="overlay" id="anasayfa"></div>
-    <div class="container">
-      <nav class="navbar navbar-expand-md navbar-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> 
-          <span class="navbar-toggler-icon"></span> 
-        </button>
-        <a class="navbar-brand" href="index.html"> 
-          <span class="text-white" id="brand-main">0MEGLE </span> <span class="text-dodgerblue">.ONLINE</span> 
-        </a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item"> <a class="nav-link" href="index.html" id="nav-home">Anasayfa</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="login.php" id="nav-login">Giriş Yap</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="sign-up.php" id="nav-signup">Üye Ol</a> </li>
-          </ul>               
-        </div>
-      </nav>
-      <video autoplay loop muted playsinline preload="auto" id="background-video">
-        <source src="video1.mp4" type="video/mp4">
-        <span id="video-fallback">Tarayıcınız video etiketini desteklemiyor.</span>
-      </video>
+      <div class="overlay" id="anasayfa"></div>
+      <div class="container">
+          <!-- Navigasyon Çubuğu -->
+          <nav class="navbar navbar-expand-md navbar-dark pt-3">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menüyü Aç"> 
+                  <span class="navbar-toggler-icon"></span> 
+              </button>
+              
+              <a class="navbar-brand font-weight-bold" href="index.html" style="font-family: 'Poppins', sans-serif;"> 
+                  <span class="text-white">0MEGLE</span><span style="color: #0d6efd;">.ONLINE</span> 
+              </a>
+              
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav ml-auto">
+                      <li class="nav-item"> <a class="nav-link" href="index.html">Anasayfa</a> </li>
+                      <li class="nav-item"> <a class="nav-link" href="login.php">Giriş Yap</a> </li>
+                      <li class="nav-item"> <a class="nav-link" href="sign-up.php">Üye Ol</a> </li>
+                  </ul>                
+              </div>
+          </nav>
 
-      <div class="content">
-        <div class="container">
-          <button class="cta-button"><a class="nav-link" href="login.php" id="btn-start">Başlayın</a></button>
-        </div>
+          <!-- Arka Plan Videosu -->
+          <video autoplay loop muted playsinline preload="auto" id="background-video">
+              <source src="video1.mp4" type="video/mp4">
+              Tarayıcınız video arka plan özelliğini desteklemiyor.
+          </video>
+
+          <!-- Merkez İçerik ve Buton -->
+          <div class="content d-flex align-items-center justify-content-center h-100">
+              <div class="container text-center">
+                  <a href="login.php" class="cta-button d-inline-block px-5 py-3 mt-4" style="text-decoration: none !important; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.2rem; letter-spacing: 0.5px;">Sohbete Başla</a>
+              </div>
+          </div>
       </div>
-    </div>
   </section>
 
-  <section class="download-section">
-    <div class="container">
-      <div class="text-content">
-        <h2 class="subheading" id="mobile-coming">ÇOK YAKINDA MOBİLDE</h2>
-        <h1 class="title" id="main-title">0megle.online | Yeni İnsanlarla Tanış</h1>
-      </div>
-      <div class="buttons">
-        <button class="download-button">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="icon" viewBox="0 0 512 512">
-            <path d="M99.617 8.057a50.191 50.191 0 00-38.815-6.713l230.932 230.933 74.846-74.846L99.617 8.057zM32.139 20.116c-6.441 8.563-10.148 19.077-10.148 30.199v411.358c0 11.123 3.708 21.636 10.148 30.199l235.877-235.877L32.139 20.116zM464.261 212.087l-67.266-37.637-81.544 81.544 81.548 81.548 67.273-37.64c16.117-9.03 25.738-25.442 25.738-43.908s-9.621-34.877-25.749-43.907zM291.733 279.711L60.815 510.629c3.786.891 7.639 1.371 11.492 1.371a50.275 50.275 0 0027.31-8.07l266.965-149.372-74.849-74.847z"></path>
-          </svg>
-          <div class="text">
-            <span class="small-text">GET IT ON</span>
-            <span class="main-text">Google Play</span>
+  <!-- Mobil Uygulama İndirme Bölümü -->
+  <section class="download-section py-5">
+      <div class="container">
+          <div class="text-content text-center mb-4">
+              <h2 class="subheading" style="color: #0d6efd; font-weight: 600; letter-spacing: 1px;">ÇOK YAKINDA MOBİLDE</h2>
+              <h1 class="title font-weight-bold">0megle.online Her Yerde Seninle</h1>
+              
+              <p class="mt-3 mb-1" style="font-size: 1.3rem; font-weight: 500; font-family: 'Poppins', sans-serif; color: #444;">Yeni İnsanlarla Tanışmanın En Kolay Yolu</p>
+              <p class="text-muted">Uygulamamız çok yakında App Store ve Google Play'de!</p>
           </div>
-        </button>
-        <button class="download-button">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="icon" viewBox="0 0 305 305">
-            <path d="M40.74 112.12c-25.79 44.74-9.4 112.65 19.12 153.82C74.09 286.52 88.5 305 108.24 305c.37 0 .74 0 1.13-.02 9.27-.37 15.97-3.23 22.45-5.99 7.27-3.1 14.8-6.3 26.6-6.3 11.22 0 18.39 3.1 25.31 6.1 6.83 2.95 13.87 6 24.26 5.81 22.23-.41 35.88-20.35 47.92-37.94a168.18 168.18 0 0021-43l.09-.28a2.5 2.5 0 00-1.33-3.06l-.18-.08c-3.92-1.6-38.26-16.84-38.62-58.36-.34-33.74 25.76-51.6 31-54.84l.24-.15a2.5 2.5 0 00.7-3.51c-18-26.37-45.62-30.34-56.73-30.82a50.04 50.04 0 00-4.95-.24c-13.06 0-25.56 4.93-35.61 8.9-6.94 2.73-12.93 5.09-17.06 5.09-4.64 0-10.67-2.4-17.65-5.16-9.33-3.7-19.9-7.9-31.1-7.9l-.79.01c-26.03.38-50.62 15.27-64.18 38.86z"></path>
-            <path d="M212.1 0c-15.76.64-34.67 10.35-45.97 23.58-9.6 11.13-19 29.68-16.52 48.38a2.5 2.5 0 002.29 2.17c1.06.08 2.15.12 3.23.12 15.41 0 32.04-8.52 43.4-22.25 11.94-14.5 17.99-33.1 16.16-49.77A2.52 2.52 0 00212.1 0z"></path>
-          </svg>
-          <div class="text">
-            <span class="small-text">Download on the</span>
-            <span class="main-text">App Store</span>
+          
+          <div class="buttons d-flex justify-content-center flex-wrap gap-3 mt-4">
+              <!-- Google Play Butonu -->
+              <button class="download-button" style="opacity: 0.7; cursor: not-allowed;" title="Çok Yakında">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="icon" viewBox="0 0 512 512">
+                      <path d="M99.617 8.057a50.191 50.191 0 00-38.815-6.713l230.932 230.933 74.846-74.846L99.617 8.057zM32.139 20.116c-6.441 8.563-10.148 19.077-10.148 30.199v411.358c0 11.123 3.708 21.636 10.148 30.199l235.877-235.877L32.139 20.116zM464.261 212.087l-67.266-37.637-81.544 81.544 81.548 81.548 67.273-37.64c16.117-9.03 25.738-25.442 25.738-43.908s-9.621-34.877-25.749-43.907zM291.733 279.711L60.815 510.629c3.786.891 7.639 1.371 11.492 1.371a50.275 50.275 0 0027.31-8.07l266.965-149.372-74.849-74.847z"></path>
+                  </svg>
+                  <div class="text text-left pl-2">
+                      <span class="small-text d-block" style="font-size: 10px;">ÇOK YAKINDA</span>
+                      <span class="main-text d-block font-weight-bold">Google Play</span>
+                  </div>
+              </button>
+              
+              <!-- App Store Butonu -->
+              <button class="download-button ml-3" style="opacity: 0.7; cursor: not-allowed;" title="Çok Yakında">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="icon" viewBox="0 0 305 305">
+                      <path d="M40.74 112.12c-25.79 44.74-9.4 112.65 19.12 153.82C74.09 286.52 88.5 305 108.24 305c.37 0 .74 0 1.13-.02 9.27-.37 15.97-3.23 22.45-5.99 7.27-3.1 14.8-6.3 26.6-6.3 11.22 0 18.39 3.1 25.31 6.1 6.83 2.95 13.87 6 24.26 5.81 22.23-.41 35.88-20.35 47.92-37.94a168.18 168.18 0 0021-43l.09-.28a2.5 2.5 0 00-1.33-3.06l-.18-.08c-3.92-1.6-38.26-16.84-38.62-58.36-.34-33.74 25.76-51.6 31-54.84l.24-.15a2.5 2.5 0 00.7-3.51c-18-26.37-45.62-30.34-56.73-30.82a50.04 50.04 0 00-4.95-.24c-13.06 0-25.56 4.93-35.61 8.9-6.94 2.73-12.93 5.09-17.06 5.09-4.64 0-10.67-2.4-17.65-5.16-9.33-3.7-19.9-7.9-31.1-7.9l-.79.01c-26.03.38-50.62 15.27-64.18 38.86z"></path>
+                      <path d="M212.1 0c-15.76.64-34.67 10.35-45.97 23.58-9.6 11.13-19 29.68-16.52 48.38a2.5 2.5 0 002.29 2.17c1.06.08 2.15.12 3.23.12 15.41 0 32.04-8.52 43.4-22.25 11.94-14.5 17.99-33.1 16.16-49.77A2.52 2.52 0 00212.1 0z"></path>
+                  </svg>
+                  <div class="text text-left pl-2">
+                      <span class="small-text d-block" style="font-size: 10px;">ÇOK YAKINDA</span>
+                      <span class="main-text d-block font-weight-bold">App Store</span>
+                  </div>
+              </button>
           </div>
-        </button>
       </div>
-    </div>
   </section>
 
-  <footer class="container-fluid text-center" id="iletisim">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-6 d-flex justify-content-center">
-          <ul class="sosyalmedya list-unstyled d-flex">
-            <li>
-              <a href="mailto:info@0megle.online" class="social-icon">
-                <i class="fas fa-envelope"></i>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="social-icon">
-                <i class="fab fa-linkedin"></i>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="social-icon">
-                <i class="fab fa-instagram"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
+  <!-- ÖZEL SEO ALANI CSS (Style.css Çakışmalarını Önler ve Tasarımı Güzelleştirir) -->
+  <style>
+      /* 
+         Ana Kapsayıcı: Gradient geçişlerini KATI bir şekilde belirledik. 
+         Burada %5 ve %95 gibi katı yüzdelerle geçişleri sadece ekranın en üst ve en altına hapsettik, 
+         böylece ortadaki alan tamamen #0f172a (Lacivert) renginde temiz kaldı.
+      */
+      .seo-gradient-wrapper {
+          background: linear-gradient(180deg, #f9f9f9 0%, #0f172a 5%, #0f172a 95%, #ffffff 100%);
+          padding: 8rem 0 8rem 0; /* Boşlukları tatlı bir ayara getirdik */
+          font-family: 'Poppins', sans-serif;
+          color: #ffffff;
+      }
+      
+      /* İçerikleri Merkeze Tutan Alan (Style.css'i Ezer) */
+      .seo-custom-container {
+          max-width: 900px !important;
+          margin: 0 auto;
+          display: block !important;
+      }
+
+      /* Üst Bilgi Paneli (Glassmorphism) */
+      .glass-panel {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 20px;
+          padding: 3rem 2.5rem;
+          margin-bottom: 4rem;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+      }
+      
+      /* Başlıklar Tam Ortalanacak */
+      .glass-panel h2, .glass-panel h3, .faq-section-title {
+          text-align: center !important;
+          color: #ffffff;
+          letter-spacing: 0.5px;
+      }
+      
+      /* Paragraflar Sola Yaslı ve Kolay Okunabilir */
+      .glass-panel p {
+          text-align: left !important;
+          color: rgba(255, 255, 255, 0.75);
+          line-height: 1.8;
+          font-size: 1rem;
+      }
+
+      /* Şık HTML5 Akordiyon (Çakışma Yapmaz) */
+      .faq-item {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 15px;
+          margin-bottom: 1.2rem;
+          overflow: hidden;
+          transition: all 0.3s ease;
+      }
+      
+      .faq-item:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(59, 130, 246, 0.3);
+      }
+
+      .faq-item summary {
+          padding: 1.2rem 1.8rem;
+          font-size: 1.05rem;
+          font-weight: 500;
+          color: #f8fafc;
+          cursor: pointer;
+          list-style: none;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      
+      .faq-item summary::-webkit-details-marker {
+          display: none;
+      }
+      
+      .faq-item summary::after {
+          content: '\f078';
+          font-family: 'Font Awesome 6 Free';
+          font-weight: 900;
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.5);
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      /* Akordiyon Açıldığındaki Tasarım */
+      .faq-item[open] {
+          background: rgba(59, 130, 246, 0.1);
+          border-color: rgba(59, 130, 246, 0.4);
+          box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+      }
+      
+      .faq-item[open] summary {
+          color: #60a5fa;
+          border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+      }
+      
+      .faq-item[open] summary::after {
+          transform: rotate(180deg);
+          color: #60a5fa;
+      }
+      
+      .faq-content {
+          padding: 1.5rem 1.8rem;
+          background: transparent;
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.95rem;
+          line-height: 1.8;
+          margin: 0;
+          text-align: left !important;
+      }
+  </style>
+
+  <!-- SEO İçerik Bölümü (Ortası Tamamen Lacivert) -->
+  <section class="seo-gradient-wrapper">
+      <div class="seo-custom-container px-3">
+          
+          <!-- Bilgi Kartı -->
+          <div class="glass-panel">
+              <h2 class="font-weight-bold mb-4" style="font-size: 1.8rem;">
+                  <span style="color: #3b82f6;">0megle.online</span> Nedir? | Ücretsiz Rastgele Görüntülü Sohbet
+              </h2>
+              <p class="mb-4">
+                  <strong>0megle.online</strong>, dünyanın dört bir yanından insanlarla anında bağlantı kurmanızı sağlayan modern, güvenli ve tamamen ücretsiz bir rastgele görüntülü sohbet platformudur. Popüler ağların kapanmasının ardından kullanıcıların güvenle tercih edebileceği en iyi alternatif olarak geliştirilmiştir. Sınırları ortadan kaldırarak yeni arkadaşlar edinmek ve farklı kültürleri tanımak artık sadece bir tık uzağınızda.
+              </p>
+              
+              <h3 class="font-weight-bold mb-3 mt-5" style="font-size: 1.4rem;">Sistem Nasıl Çalışır?</h3>
+              <p class="mb-0">
+                  Sisteme saniyeler içinde ücretsiz kayıt olun veya giriş yapın. Sohbet odasında <strong style="color: #60a5fa;">"Aramayı Başlat"</strong> butonuna tıklamanız yeterlidir. Gelişmiş akıllı eşleşme altyapımız, çevrimiçi olan rastgele bir kullanıcıyla sizi saniyeler içerisinde eşleştirir. Görüşmeden memnun kalmazsanız <strong style="color: #ef4444;">"Geç / Sonraki"</strong> butonuyla anında yeni bir bağlantıya geçiş yapabilirsiniz.
+              </p>
+          </div>
+
+          <!-- Zenginleştirilmiş Sıkça Sorulan Sorular -->
+          <h3 class="faq-section-title font-weight-bold mb-4 mt-5" style="font-size: 1.6rem;">Sıkça Sorulan Sorular</h3>
+          
+          <details class="faq-item">
+              <summary>0megle.online tamamen ücretsiz mi?</summary>
+              <div class="faq-content">
+                  Evet, platformumuz tamamen ücretsizdir. Herhangi bir üyelik bedeli veya gizli ücret ödemeden dilediğiniz kadar rastgele görüntülü sohbet edebilir, yeni insanlarla tanışmanın keyfini çıkarabilirsiniz.
+              </div>
+          </details>
+
+          <details class="faq-item">
+              <summary>Kamera ve mikrofon izni zorunlu mu?</summary>
+              <div class="faq-content">
+                  Sistemimiz karşılıklı görüntülü ve sesli iletişim mimarisi (WebRTC) üzerine kurulu olduğu için tarayıcınız üzerinden kamera ve mikrofon erişimine izin vermeniz gerekmektedir. İzin vermediğiniz takdirde diğer kullanıcılarla eşleşme sağlanamaz.
+              </div>
+          </details>
+
+          <details class="faq-item">
+              <summary>Telefonda (Mobil cihazlarda) çalışır mı?</summary>
+              <div class="faq-content">
+                  Kesinlikle! Web sitemiz %100 mobil uyumlu (responsive) olarak tasarlanmıştır. Herhangi bir uygulama indirmenize gerek kalmadan iOS (iPhone) veya Android işletim sistemli telefonlarınızın tarayıcısından sitemize girerek kesintisiz görüntülü sohbet edebilirsiniz.
+              </div>
+          </details>
+
+          <details class="faq-item">
+              <summary>Görüşmelerim kayıt altına alınıyor mu?</summary>
+              <div class="faq-content">
+                  Hayır. Görüşmeleriniz doğrudan P2P (Peer-to-Peer / Uçtan Uca) teknolojisi ile sadece sizin ve eşleştiğiniz kişinin cihazı arasında gerçekleşir. Görüntü ve ses verileriniz sunucularımıza ulaşmaz, asla depolanmaz ve kayıt altına alınmaz. Gizliliğiniz her zaman güvence altındadır.
+              </div>
+          </details>
+
+          <details class="faq-item">
+              <summary>Platform güvenli mi? Kötü niyetli kullanıcıları engelleyebilir miyim?</summary>
+              <div class="faq-content">
+                  Topluluğumuzun güvenliği bizim için önceliklidir. Hesapsız (anonim) girişleri engelleyerek sahte hesapların önüne geçiyoruz. Ayrıca rahatsız edici bir kullanıcıyla karşılaştığınızda anında "Geç" butonuna basarak bağlantıyı kesebilir ve farklı bir kullanıcıyla eşleşebilirsiniz.
+              </div>
+          </details>
+
+          <details class="faq-item">
+              <summary>Yabancı dil pratiği yapmak için uygun mu?</summary>
+              <div class="faq-content">
+                  Evet! Platformumuz dünyanın dört bir yanından kullanıcıları bir araya getirdiği için İngilizce, Almanca veya diğer dillerde pratik yapmak (speaking) ve farklı ülkelerden insanlarla kültür alışverişinde bulunmak için harika bir ücretsiz araçtır.
+              </div>
+          </details>
+
       </div>
-      <div class="row justify-content-center lisans">
-        <p id="footer-text">Copyright ©2026 Tüm hakları saklıdır | 
-          <a href="#" class="karavan-link" target="_blank">0megle Ekibi</a>
-        </p>
+  </section>
+
+  <!-- Footer / Alt Kısım (Aydınlık Kapanış) -->
+  <footer class="container-fluid text-center py-5" id="iletisim" style="background-color: #ffffff; border: none;">
+      <div class="container">
+          <div class="row justify-content-center mb-4">
+              <div class="col-md-6 d-flex justify-content-center">
+                  <ul class="sosyalmedya list-unstyled d-flex gap-4 m-0">
+                      <li class="mx-2">
+                          <a href="mailto:info@0megle.online" class="social-icon" aria-label="Bize Ulaşın" style="color: #333;">
+                              <i class="fas fa-envelope fa-lg"></i>
+                          </a>
+                      </li>
+                      <li class="mx-2">
+                          <a href="#" class="social-icon" aria-label="LinkedIn" style="color: #333;">
+                              <i class="fab fa-linkedin fa-lg"></i>
+                          </a>
+                      </li>
+                      <li class="mx-2">
+                          <a href="#" class="social-icon" aria-label="Instagram" style="color: #333;">
+                              <i class="fab fa-instagram fa-lg"></i>
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+          <div class="row justify-content-center lisans">
+              <p class="mb-0 font-weight-light" style="font-size: 14px; color: #666;">
+                  Copyright &copy; 2024 0megle.online | All rights reserved
+              </p>
+          </div>
       </div>
-    </div>
   </footer>
 
+  <!-- JS Kütüphaneleri -->
   <script src="bootstrap/js/jquery-3.4.1.min.js"></script>
   <script src="bootstrap/js/bootstrap.js"></script>
   <script src="jqueryui/jquery-ui.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      let lang = navigator.language || navigator.userLanguage;
-      lang = lang.toLowerCase();
-
-      // Tarayıcı dili 'tr' ile başlamıyorsa her şeyi İngilizce yap
-      if (!lang.startsWith("tr")) {
-        // Meta Etiketleri
-        document.documentElement.lang = "en";
-        document.getElementById("meta-desc").setAttribute("content", "Match with random people and video chat with 0megle.online");
-        
-        // Sayfa Başlığı ve Menü
-        document.getElementById("page-title").innerText = "0megle.online | Meet New People";
-        document.getElementById("nav-home").innerText = "Home";
-        document.getElementById("nav-login").innerText = "Log In";
-        document.getElementById("nav-signup").innerText = "Sign Up";
-        
-        // İçerik ve Butonlar
-        let videoFallback = document.getElementById("video-fallback");
-        if (videoFallback) videoFallback.innerText = "Your browser does not support the video tag.";
-        document.getElementById("btn-start").innerText = "Get Started";
-        document.getElementById("mobile-coming").innerText = "COMING SOON ON MOBILE";
-        document.getElementById("main-title").innerText = "0megle.online | Meet New People";
-        
-        // Footer
-        document.getElementById("footer-text").innerHTML = `Copyright ©2026 All rights reserved |
-          <a href="#" class="karavan-link" target="_blank">0megle Team</a>`;
-      }
-    });
-  </script>
+  <script src="jscript.js"></script>
 </body>
 </html>

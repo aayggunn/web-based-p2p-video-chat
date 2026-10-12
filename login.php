@@ -1,301 +1,360 @@
 <?php
 session_start();
 include("connection.php");
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-/* ---------------- DİL SİSTEMİ ---------------- */
-// Kullanıcının tarayıcı dilini PHP üzerinden algılama
-if (isset($_GET['lang'])) {
-    $_SESSION['lang'] = $_GET['lang'];
-} elseif (!isset($_SESSION['lang'])) {
-    $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'tr', 0, 2);
-    $_SESSION['lang'] = ($browserLang == 'tr') ? 'tr' : 'en';
-}
-$currentLang = $_SESSION['lang'];
+$uyari = ""; 
 
-$texts = [
-    'tr' => [
-        'title' => '0megle.online | Giriş Yap',
-        'login' => 'Giriş Yap',
-        'username' => 'Kullanıcı Adı',
-        'password' => 'Şifre',
-        'remember' => 'Beni Hatırla',
-        'forgot' => 'Şifremi Unuttum?',
-        'or' => 'veya',
-        'google' => 'Google ile Giriş Yap',
-        'no_account' => 'Hesabın Yok Mu?',
-        'signup' => 'Kaydol',
-        'wrong_password' => 'Şifre yanlış.',
-        'wrong_credentials' => 'Kullanıcı adı veya şifre yanlış.',
-        'fill_all' => 'Lütfen tüm alanları doldurun.',
-        'home_link' => 'Anasayfaya Dön'
-    ],
-    'en' => [
-        'title' => '0megle.online | Login',
-        'login' => 'Login',
-        'username' => 'Username',
-        'password' => 'Password',
-        'remember' => 'Remember Me',
-        'forgot' => 'Forgot Password?',
-        'or' => 'or',
-        'google' => 'Login with Google',
-        'no_account' => 'Don’t have an account?',
-        'signup' => 'Sign Up',
-        'wrong_password' => 'Wrong password.',
-        'wrong_credentials' => 'Invalid username or password.',
-        'fill_all' => 'Please fill in all fields.',
-        'home_link' => 'Back to Home'
-    ]
-];
-$lang = $texts[$currentLang];
-
-/* ---------------- NORMAL GİRİŞ ---------------- */
-$uyari = "";
 if (isset($_POST["giris"])) {
-    $username = trim($_POST["user-name"]);
-    $password = $_POST["password"];
+    $username =$_POST["user-name"];
+    $password =$_POST["password"];
 
     if (!empty($username) && !empty($password)) {
-        $secim = "SELECT `member-id`, `user-name`, `email`, `password` FROM `users` WHERE LOWER(`user-name`) = LOWER(?)";
-        $calistir = mysqli_prepare($baglanti, $secim);
-        mysqli_stmt_bind_param($calistir, "s", $username);
-        mysqli_stmt_execute($calistir);
-        mysqli_stmt_bind_result($calistir, $member_id, $user_name, $email, $hashed_password);
+        // is_verified sütununu da çekiyoruz
+        $secim = "SELECT `member-id`, `user-name`, `email`, `password`, `is_verified` FROM `users` WHERE LOWER(`user-name`) = LOWER(?)";
+        $calistir = mysqli_prepare($baglanti,$secim);
 
-        if (mysqli_stmt_fetch($calistir)) {
-            if (password_verify($password, $hashed_password)) {
-                $_SESSION["member-id"] = $member_id;
-                $_SESSION["user-name"] = $user_name;
-                $_SESSION["email"] = $email;
-                header("location: home-page.php");
-                exit();
+        if ($calistir) {
+            mysqli_stmt_bind_param($calistir, "s", $username);
+            mysqli_stmt_execute($calistir);
+            mysqli_stmt_bind_result($calistir,$member_id, $user_name,$email, $hashed_password,$is_verified);
+
+            if (mysqli_stmt_fetch($calistir)) {
+                if (password_verify($password,$hashed_password)) {
+                    
+                    // MAİL ONAY KONTROLÜ
+                    if ($is_verified == 0) {$uyari = "Lütfen giriş yapmadan önce e-posta adresinize gönderilen linke tıklayarak hesabınızı doğrulayın.";
+                    } else {
+                        $_SESSION["member-id"] = $member_id;
+                        $_SESSION["user-name"] = $user_name;
+                        $_SESSION["email"] = $email;
+                        header("location: home-page.php");
+                        exit();
+                    }
+                    
+                } else {
+                    $uyari = "Şifre yanlış.";
+                }
             } else {
-                $uyari = $lang['wrong_password'];
+                $uyari = "Kullanıcı adı veya şifre yanlış.";
             }
-        } else {
-            $uyari = $lang['wrong_credentials'];
         }
     } else {
-        $uyari = $lang['fill_all'];
+        $uyari = "Lütfen kullanıcı adı ve şifre alanlarını doldurun.";
     }
 }
+mysqli_close($baglanti);
 ?>
 <!DOCTYPE html>
-<html lang="<?= $currentLang ?>">
+<html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title><?= $lang['title'] ?></title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<style>
-    body {
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #000; /* Video yüklenmeden önceki arka plan */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#111111">
     
-    #background-video {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        z-index: -2;
-        object-fit: cover;
-    }
+    <!-- Temel SEO Optimizasyonu -->
+    <title>Giriş Yap | 0megle.online - Rastgele Görüntülü Sohbet</title>
+    <meta name="description" content="0megle.online hesabınıza giriş yapın ve dünyanın her yerinden insanlarla anında rastgele görüntülü sohbete devam edin.">
+    <meta name="keywords" content="omegle giriş, rastgele sohbet, görüntülü sohbet, chat rulet, arkadaş bulma, canlı sohbet, webcam chat">
+    <meta name="author" content="0megle.online">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://0megle.online/login.php" />
 
-    /* Anasayfaya benzer karanlık filtre */
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: -1;
-    }
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn Paylaşım Etiketleri) -->
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://0megle.online/login.php">
+    <meta property="og:site_name" content="0megle.online">
+    <meta property="og:title" content="Giriş Yap | 0megle.online">
+    <meta property="og:description" content="Hesabınıza giriş yapın ve sohbete kaldığınız yerden devam edin.">
+    <meta property="og:image" itemprop="image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+    <meta property="og:image:secure_url" itemprop="image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter Card Meta Etiketleri -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="0megle.online - Giriş Yap">
+    <meta name="twitter:description" content="Hesabınıza giriş yapın ve dünyayla sohbet edin.">
+    <meta name="twitter:image" content="https://0megle.online/0megle-online-rastgele-sohbet-logo.jpg">
 
-    /* Modern Glassmorphism Kart Tasarımı */
-    .card {
-        background: rgba(20, 20, 20, 0.65);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-        width: 100%;
-        max-width: 450px;
-        color: #fff;
-        padding: 2.5rem !important;
+    <!-- Sekme (Favicon) Logosu -->
+    <link rel="icon" href="0megle-online-rastgele-sohbet-logo.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="0megle-online-rastgele-sohbet-logo.jpg">
+    
+    <!-- Yapısal Veri (Schema Markup) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Giriş Yap | 0megle.online",
+      "url": "https://0megle.online/login.php",
+      "description": "0megle.online rastgele görüntülü sohbet ağına giriş yapın.",
+      "inLanguage": "tr-TR"
     }
+    </script>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google'ın kimlik doğrulama kütüphanesi -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    .brand-logo {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        font-weight: 600;
-        font-size: 1.5rem;
-        letter-spacing: 1px;
-    }
+    <style>
+        /* Modern Glassmorphism Tasarım Ayarları */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #ffffff; 
+            overflow-x: hidden;
+            background-color: #111; 
+        }
 
-    .text-dodgerblue { color: #1e90ff; }
+        /* Arka Plan Videosu - Tam Ekran Kaplama */
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -100;
+            object-fit: cover;
+        }
 
-    .form-control {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 30px;
-        padding: 12px 15px 12px 45px;
-        color: #fff;
-    }
+        /* Videonun üzerindeki siyah/karartma filtresi */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+            z-index: -99;
+        }
 
-    .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        /* Transparanlık artırılmış Buzlu Cam Kart */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            color: white;
+            padding: 15px;
+            margin: 20px 0;
+        }
 
-    .form-control:focus {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: #1e90ff;
-        color: #fff;
-        box-shadow: 0 0 0 0.25rem rgba(30, 144, 255, 0.25);
-    }
+        .glass-card .card-header {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding-bottom: 15px;
+        }
 
-    .input-icon {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 18px;
-        color: rgba(255, 255, 255, 0.6);
-    }
+        /* Yarı saydam giriş kutucukları */
+        .glass-input {
+            background: rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
 
-    .btn-primary {
-        background: #1e90ff;
-        border: none;
-        border-radius: 30px;
-        padding: 10px;
-        font-weight: 600;
-        transition: 0.3s;
-    }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+            font-size: 0.95rem;
+        }
 
-    .btn-primary:hover {
-        background: #0073e6;
-        transform: translateY(-2px);
-    }
+        .glass-input:focus {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1) !important;
+            outline: none;
+        }
 
-    .btn-google {
-        background-color: #fff;
-        color: #333;
-        border-radius: 30px;
-        padding: 10px;
-        font-weight: 500;
-        transition: 0.3s;
-    }
+        /* Özel Ana Buton Tasarımı */
+        .btn-glass-primary {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.8), rgba(0, 86, 179, 0.9));
+            border: none;
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+        }
 
-    .btn-google:hover {
-        background-color: #f1f1f1;
-        color: #000;
-    }
+        .btn-glass-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5);
+            color: white;
+        }
 
-    .btn-google img {
-        width: 18px;
-        margin-right: 8px;
-        vertical-align: middle;
-    }
+        /* Link Renkleri */
+        .glass-card a {
+            color: #8bb9fe;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        .glass-card a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
 
-    a {
-        color: #1e90ff;
-        text-decoration: none;
-        transition: 0.3s;
-    }
+        /* Hata Uyarı Kutusu */
+        .custom-alert {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 12px;
+            color: #ffb3b8;
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+        }
 
-    a:hover {
-        color: #66b2ff;
-    }
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 6px;
+        }
 
-    .form-check-label {
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    hr {
-        border-color: rgba(255, 255, 255, 0.2);
-    }
-</style>
+        .form-check-label {
+            font-weight: 400;
+            color: rgba(255,255,255,0.85);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<video autoplay muted loop playsinline id="background-video">
-    <source src="video2.mp4" type="video/mp4">
-</video>
-<div class="overlay"></div>
-
-<div class="card">
-    <div class="brand-logo">
-        <a href="index.html" class="text-white" style="text-decoration: none;">
-            0MEGLE<span class="text-dodgerblue">.ONLINE</span>
-        </a>
-    </div>
-
-    <h3 class="text-center mb-4 font-weight-bold"><?= $lang['login'] ?></h3>
-
-    <?php if ($uyari): ?>
-        <div class="alert alert-danger" style="border-radius: 10px; font-size: 0.9rem;">
-            <?= htmlspecialchars($uyari) ?>
-        </div>
-    <?php endif; ?>
-
-    <form method="POST" autocomplete="off">
-        <div class="mb-3 position-relative">
-            <i class="fas fa-user input-icon"></i>
-            <input type="text" class="form-control" name="user-name" placeholder="<?= $lang['username'] ?>" required />
-        </div>
-        
-        <div class="mb-4 position-relative">
-            <i class="fas fa-lock input-icon"></i>
-            <input type="password" class="form-control" name="password" placeholder="<?= $lang['password'] ?>" required />
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4 px-1">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="remember-me">
-                <label class="form-check-label" for="remember-me">
-                    <?= $lang['remember'] ?>
-                </label>
-            </div>
-            <a href="sifre-sifirla-talep.php" style="font-size: 0.9rem;"><?= $lang['forgot'] ?></a>
-        </div>
-
-        <div class="d-grid">
-            <button type="submit" name="giris" class="btn btn-primary"><?= $lang['login'] ?></button>
-        </div>
-    </form>
-
-    <div class="text-center my-3 text-white-50" style="font-size: 0.85rem;">
-        <?= $lang['or'] ?>
-    </div>
-
-    <div class="d-grid mb-4">
-        <a href="#" class="btn btn-google">
-            <i class="fab fa-google text-danger me-2"></i> <?= $lang['google'] ?>
-        </a>
-    </div>
-
-    <div class="text-center mt-2" style="font-size: 0.95rem;">
-        <span class="text-white-50"><?= $lang['no_account'] ?></span> 
-        <a href="sign-up.php" class="fw-bold ms-1"><?= $lang['signup'] ?></a>
-    </div>
+    <!-- Arka Plan Videosu -->
+    <video autoplay muted loop id="bg-video">
+        <source src="video2.mp4" type="video/mp4">
+        Tarayıcınız video arka plan özelliğini desteklemiyor.
+    </video>
     
-    <div class="text-center mt-3">
-        <a href="index.html" class="text-white-50" style="font-size: 0.8rem;">
-            <i class="fas fa-arrow-left me-1"></i> <?= $lang['home_link'] ?>
-        </a>
-    </div>
-</div>
+    <!-- Karartma Katmanı -->
+    <div class="video-overlay"></div>
 
+    <!-- Google Login Arka Plan Veri Aktarımı -->
+    <div id="g_id_onload"
+         data-client_id="1022652530736-b1he3ojt2h6a49496kideou1dhf5coka.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="container w-100">
+        <div class="row justify-content-center">
+            <div class="col-11 col-sm-10 col-md-8 col-lg-5">
+                <div class="card glass-card">
+                    <div class="card-header text-center border-0 pt-3">
+                        <h2 class="fw-bold mb-1" style="letter-spacing: 1px;">Giriş Yap</h2>
+                        <p class="mb-0" style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Maceraya kaldığın yerden devam et</p>
+                    </div>
+                    <div class="card-body pt-2">
+                        
+                        <!-- Uyarı Mesajı Gösterimi -->
+                        <?php if(!empty($uyari)): ?>
+                            <div class="alert custom-alert p-3 mb-4 text-center">
+                                <i class="fas fa-exclamation-circle me-2"></i> <?php echo $uyari; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <form action="login.php" method="POST">
+                            
+                            <!-- Kullanıcı Adı -->
+                            <div class="mb-3">
+                                <label for="user-name" class="form-label">Kullanıcı Adı</label>
+                                <input type="text" class="form-control glass-input" id="user-name" name="user-name" placeholder="Kullanıcı adınızı girin" required>
+                            </div>
+
+                            <!-- Şifre -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Şifre</label>
+                                <input type="password" class="form-control glass-input" id="password" name="password" placeholder="••••••••" required>
+                            </div>
+
+                            <!-- Beni Hatırla ve Şifremi Unuttum -->
+                            <div class="mb-4 d-flex justify-content-between align-items-center px-1">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" id="remember-me" style="background-color: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4);">
+                                    <label class="form-check-label" for="remember-me" style="font-size: 0.9rem;">Beni Hatırla</label>
+                                </div>
+                                <a href="sifre-sifirla-talep.php" style="font-size: 0.9rem;">Şifremi Unuttum</a>
+                            </div>
+
+                            <!-- Giriş Yap Butonu -->
+                            <div class="d-grid mb-4 mt-2">
+                                <button type="submit" name="giris" class="btn btn-glass-primary">Giriş Yap</button>
+                            </div>
+                        </form>
+
+                        <!-- Google ile Hızlı Giriş (Ortalanmış) -->
+                        <div class="text-center position-relative mt-4 mb-3">
+                            <hr style="border-color: rgba(255,255,255,0.2);">
+                            <span class="position-absolute top-50 start-50 translate-middle px-3" style="background-color: transparent; color: rgba(255,255,255,0.6); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                Veya
+                            </span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-center w-100">
+                            <!-- GERÇEK GOOGLE BUTONU -->
+                            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="center"></div>
+                        </div>
+
+                        <!-- Hesabın Yok Mu? -->
+                        <div class="text-center mt-4 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+                            <p class="mb-0" style="color: rgba(255,255,255,0.8);">Hesabınız Yok Mu? <a href="sign-up.php">Kaydol</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Google Login İşlemini Yapan Script -->
+    <script>
+      function handleCredentialResponse(response) {
+         const jwtToken = response.credential;
+         
+         fetch('google_login.php', {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({ token: jwtToken })
+         })
+         .then(res => res.json())
+         .then(data => {
+             if(data.success) {
+                 window.location.href = "home-page.php"; 
+             } else {
+                 alert("Hata: " + (data.message || "Bilinmeyen Hata"));
+             }
+         })
+         .catch(err => {
+             console.error("Fetch hatası:", err);
+             alert("Sunucuya bağlanılamadı.");
+         });
+      }
+    </script>
 </body>
 </html>
